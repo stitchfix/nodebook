@@ -30,6 +30,10 @@ For additional example usage, see [nodebook_demo.ipynb](./nodebook_demo.ipynb). 
 
 ## FAQ
 
+#### Q: Does Nodebook support Python 3?
+
+Unfortunately, not yet. Please try it in Python 2.7.
+
 #### Q: Why am I seeing "ERROR:root:Cell magic `%%execute_cell` not found."?
 
 Nodebook loads a javascript plugin to modify Jupyter's behavior. If you encounter this error, it means that the javascript plugin is loaded but the ipython plugin is not. This can happen when the javascript is already loaded but you have restarted the kernel and haven't run `%nodebook {mode} {name}`. The solution is either to run the `%nodebook` magic (if you want to run nodebook), or delete the cell with the `%nodebook` magic and refresh your browser to unload the javascript (if you want to turn nodebook off).
