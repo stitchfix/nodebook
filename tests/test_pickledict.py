@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import pandas as pd
 import pytest
 from nodebook.pickledict import PickleDict
@@ -7,7 +9,7 @@ from nodebook.pickledict import PickleDict
 def mydict(request, tmpdir):
     if request.param == 'tmpdir':
         persist_path = tmpdir.strpath
-        print persist_path
+        print(persist_path)
     else:
         persist_path = None
     return PickleDict(persist_path=persist_path)

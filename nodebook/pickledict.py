@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import io
 import os
 from functools import partial
@@ -61,7 +62,7 @@ class PickleDict(object, UserDict.DictMixin):
         self.dict = {}
 
     def keys(self):
-        return self.dict.keys()
+        return list(self.dict.keys())
 
     def __len__(self):
         return len(self.dict)

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import pandas as pd
 import pytest
 from nodebook.nodebookcore import ReferenceFinder, Nodebook, Node
