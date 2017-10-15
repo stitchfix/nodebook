@@ -55,7 +55,7 @@ def msgpack_deserialize(code, data):
         return msgpack.ExtType(code, data)
 
 
-class PickleDict(object, DictMixin):
+class PickleDict(DictMixin):
     """
     Dictionary with immutable elements using pickle(dill), optionally supporting persisting to disk
     """
@@ -86,6 +86,10 @@ class PickleDict(object, DictMixin):
         if key in self.dict:
             return self[key]
         return default
+
+    def __iter__(self):
+        for key in self.dict:
+            yield key
 
     def __getitem__(self, key):
         if self.persist_path is not None:
