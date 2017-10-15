@@ -14,7 +14,12 @@ import dill
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        # Python3. We are using StringIO as a target for pickle, so we
+        # actually want BytesIO.
+        from io import BytesIO as StringIO
 
 import UserDict
 
