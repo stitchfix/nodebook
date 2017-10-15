@@ -21,7 +21,11 @@ except ImportError:
         # actually want BytesIO.
         from io import BytesIO as StringIO
 
-import UserDict
+try:
+    from UserDict import DictMixin
+except ImportError:
+    # see https://github.com/flask-restful/flask-restful/pull/231/files
+    from collections import MutableMapping as DictMixin
 
 PANDAS_CODE = 1
 DILL_CODE = 2
@@ -51,7 +55,7 @@ def msgpack_deserialize(code, data):
         return msgpack.ExtType(code, data)
 
 
-class PickleDict(object, UserDict.DictMixin):
+class PickleDict(object, DictMixin):
     """
     Dictionary with immutable elements using pickle(dill), optionally supporting persisting to disk
     """
