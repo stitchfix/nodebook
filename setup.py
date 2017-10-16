@@ -9,7 +9,7 @@ if 'bdist_wheel' in sys.argv:
 
 setup(
     name='nodebook',
-    version='0.1.0',
+    version='0.2.0-dev',
     author='Kevin Zielnicki',
     author_email='kzielnicki@stitchfix.com',
     license='Stitch Fix 2017',
