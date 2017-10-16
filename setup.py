@@ -18,7 +18,7 @@ setup(
     long_description='Nodebook Jupyter Extension',
     url='https://github.com/stitchfix/nodebook',
     install_requires=[
-        'ipython<6',  # newer versions of ipython do not support 2.7
+        'ipython',
         'jupyter',
         'click',
         'dill',
