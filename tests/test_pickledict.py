@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from __future__ import print_function
+from __future__ import unicode_literals
 import pandas as pd
 import pytest
 from nodebook.pickledict import PickleDict
@@ -23,6 +24,10 @@ class TestPickleDict(object):
     def test_string(self, mydict):
         mydict['test_string'] = 'foo'
         assert mydict['test_string'] == 'foo'
+
+    def test_bytes(self, mydict):
+        mydict['test_bytes'] = b'foo'
+        assert mydict['test_bytes'] == b'foo'
 
     def test_df(self, mydict):
         df = pd.DataFrame({'a': [0, 1, 2], 'b': ['foo', 'bar', 'baz']})
