@@ -7,9 +7,10 @@ Nodebook is a plugin for Jupyter Notebook designed to enforce an ordered flow of
 
 ## Installation
 
-Nodebook is available on pypi and can be installed with pip:
+Nodebook is available on pypi and can be installed with pip. Additionally, the jupyter extension must be registered:
 ```
 pip install nodebook
+upyter nbextension install --py nodebook
 ```
 
 ## Usage
