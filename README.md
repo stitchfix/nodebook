@@ -30,9 +30,9 @@ For additional example usage, see [nodebook_demo.ipynb](./nodebook_demo.ipynb). 
 
 ## FAQ
 
-#### Q: Does Nodebook support Python 3?
+#### Q: Does Nodebook support Python 2?
 
-Unfortunately, not yet. Please try it in Python 2.7.
+Yes, but we recommend using Python 3.
 
 #### Q: Why am I seeing "ERROR:root:Cell magic `%%execute_cell` not found."?
 

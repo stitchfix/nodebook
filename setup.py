@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from setuptools import setup, find_packages
 import os
 import sys
@@ -8,7 +9,7 @@ if 'bdist_wheel' in sys.argv:
 
 setup(
     name='nodebook',
-    version='0.1.0',
+    version='0.2.0-dev',
     author='Kevin Zielnicki',
     author_email='kzielnicki@stitchfix.com',
     license='Stitch Fix 2017',
@@ -17,7 +18,7 @@ setup(
     long_description='Nodebook Jupyter Extension',
     url='https://github.com/stitchfix/nodebook',
     install_requires=[
-        'ipython<6',  # newer versions of ipython do not support 2.7
+        'ipython',
         'jupyter',
         'click',
         'dill',
