@@ -93,7 +93,7 @@ def execute_cell(line, cell):
 def load_ipython_extension(ipython):
     ipython.register_magic_function(nodebook, magic_kind='line')
     ipython.register_magic_function(execute_cell, magic_kind='cell')
-    ipython.run_cell_magic('javascript', '', "Jupyter.utils.load_extensions('nodebookext')")
+    ipython.run_cell_magic('javascript', '', "Jupyter.utils.load_extensions('nodebook/nodebookext')")
 
 
 def unload_ipython_extension(ipython):

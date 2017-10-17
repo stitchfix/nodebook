@@ -9,7 +9,7 @@ if 'bdist_wheel' in sys.argv:
 
 setup(
     name='nodebook',
-    version='0.2.0-dev',
+    version='0.2.0',
     author='Kevin Zielnicki',
     author_email='kzielnicki@stitchfix.com',
     license='Stitch Fix 2017',
@@ -27,8 +27,7 @@ setup(
         'pytest-runner',
     ],
     tests_require=['pytest'],
-    data_files=[
-        (os.path.expanduser('~/.ipython/nbextensions'), ['ipython/nbextensions/nodebookext.js']),
-        (os.path.expanduser('~/.ipython/extensions'), ['ipython/extensions/nodebookext.py']),
-    ],
+    package_data={
+        'nodebook': ['ipython/nbextensions/*.js']
+    },
 )
