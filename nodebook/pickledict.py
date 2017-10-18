@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import io
 import os
 from functools import partial
@@ -5,6 +6,7 @@ import hashlib
 import pandas as pd
 import msgpack
 import inspect
+import six
 
 # using dill instead of pickle for more complete serialization
 import dill
@@ -13,9 +15,18 @@ import dill
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        # Python3. We are using StringIO as a target for pickle, so we
+        # actually want BytesIO.
+        from io import BytesIO as StringIO
 
-import UserDict
+try:
+    from UserDict import DictMixin
+except ImportError:
+    # see https://github.com/flask-restful/flask-restful/pull/231/files
+    from collections import MutableMapping as DictMixin
 
 PANDAS_CODE = 1
 DILL_CODE = 2
@@ -45,7 +56,7 @@ def msgpack_deserialize(code, data):
         return msgpack.ExtType(code, data)
 
 
-class PickleDict(object, UserDict.DictMixin):
+class PickleDict(DictMixin):
     """
     Dictionary with immutable elements using pickle(dill), optionally supporting persisting to disk
     """
@@ -55,13 +66,13 @@ class PickleDict(object, UserDict.DictMixin):
         persist_path: if provided, perform serialization to/from disk to this path
         """
         self.persist_path = persist_path
+        self.encodings = {}
         self.dump = partial(msgpack.dump, default=msgpack_serialize)
         self.load = partial(msgpack.load, ext_hook=msgpack_deserialize)
-
         self.dict = {}
 
     def keys(self):
-        return self.dict.keys()
+        return list(self.dict.keys())
 
     def __len__(self):
         return len(self.dict)
@@ -77,25 +88,33 @@ class PickleDict(object, UserDict.DictMixin):
             return self[key]
         return default
 
+    def __iter__(self):
+        for key in self.dict:
+            yield key
+
     def __getitem__(self, key):
         if self.persist_path is not None:
             path = self.dict[key]
             with open(path, 'rb') as f:
-                value = self.load(f)
+                value = self.load(f, encoding=self.encodings[key])
         else:
             f = StringIO(self.dict[key])
-            value = self.load(f)
+            value = self.load(f, encoding=self.encodings[key])
         return value
 
     def __setitem__(self, key, value):
+        encoding = None
+        if isinstance(value, six.string_types):
+            encoding = 'utf-8'
+        self.encodings[key] = encoding
         if self.persist_path is not None:
             path = os.path.join(self.persist_path, '%s.pak' % key)
             with open(path, 'wb') as f:
-                self.dump(value, f)
+                self.dump(value, f, encoding=encoding)
             self.dict[key] = path
         else:
             f = StringIO()
-            self.dump(value, f)
+            self.dump(value, f, encoding=encoding)
             serialized = f.getvalue()
             self.dict[key] = serialized
 

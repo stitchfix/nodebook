@@ -7,9 +7,10 @@ Nodebook is a plugin for Jupyter Notebook designed to enforce an ordered flow of
 
 ## Installation
 
-Nodebook is available on pypi and can be installed with pip:
+Nodebook is available on pypi and can be installed with pip. Additionally, the jupyter extension must be registered:
 ```
 pip install nodebook
+jupyter nbextension install --py nodebook
 ```
 
 ## Usage
@@ -17,7 +18,7 @@ pip install nodebook
 To use Nodebook, add the following lines to a cell in your Jupyter notebook:
 ```
 #pragma nodebook off
-%load_ext nodebookext
+%load_ext nodebook.ipython
 %nodebook {mode} {name}
 ```
 Where `{mode}` is one of `memory` or `disk`, and `{name}` is a unique identifier for your notebook.
@@ -30,9 +31,9 @@ For additional example usage, see [nodebook_demo.ipynb](./nodebook_demo.ipynb). 
 
 ## FAQ
 
-#### Q: Does Nodebook support Python 3?
+#### Q: Should I use Python 2 or Python 3 with Nodebook?
 
-Unfortunately, not yet. Please try it in Python 2.7.
+There has been an [increasing consensus](http://www.python3statement.org/) toward sunsetting support for Python 2, including in Project Jupyter. Nodebook currently supports both Python 2 and Python 3, but Python 3 is preferred.
 
 #### Q: Why am I seeing "ERROR:root:Cell magic `%%execute_cell` not found."?
 

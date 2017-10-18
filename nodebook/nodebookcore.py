@@ -1,6 +1,9 @@
+from __future__ import absolute_import
+from __future__ import print_function
 from . import pickledict
 import ast
-import __builtin__
+import six.moves.builtins
+import six
 
 INDENT = '    '  # an indent is canonically 4 spaces ;)
 
@@ -116,7 +119,7 @@ class Nodebook(object):
         res, output_objs, output_hashes = node.run(input_objs, input_hashes)
 
         # update node outputs
-        for var, val in output_objs.iteritems():
+        for var, val in six.iteritems(output_objs):
             self.variables[output_hashes[var]] = val
         self._update_output_hashes(node, output_hashes)
 
@@ -129,7 +132,7 @@ class Nodebook(object):
         """
         # base case
         if node is None:
-            if var in __builtin__.__dict__:
+            if var in six.moves.builtins.__dict__:
                 return None
             else:
                 raise KeyError("name '%s' is not defined" % var)
@@ -141,7 +144,7 @@ class Nodebook(object):
             else:
                 # re-run the parent if it wasn't valid
                 # TODO: synchronize output with frontend javascript
-                print "auto-running invalidated node N_%s (%s)" % (node.get_index() + 1, node.name)
+                print("auto-running invalidated node N_%s (%s)" % (node.get_index() + 1, node.name))
                 self.run_node(node.name)
                 return self._find_latest_output(node, var)
         else:
@@ -153,23 +156,23 @@ class Nodebook(object):
         Update node's output hashes and invalid downstream nodes that depended on their previous values
         """
         # invalidate any any children relying on specific hash-versions of old outputs that aren't in the new outputs
-        invalidated_outputs = set(node.outputs.iteritems()) - set(outputs.iteritems())
+        invalidated_outputs = set(six.iteritems(node.outputs)) - set(six.iteritems(outputs))
         invalidated_outputs = {k: v for k, v in invalidated_outputs}
 
         # also invalidate any children that rely on any version of a brand-new output, regardless of hash
         # TODO this is potentially overly restrictive, if, eg, a value is blindly over-written again later
         # TODO(con't) we should try to account for this to avoid invalidating excessively many cells
-        new_outputs = set(outputs.iteritems()) - set(node.outputs.iteritems())
+        new_outputs = set(six.iteritems(outputs)) - set(six.iteritems(node.outputs))
         new_outputs = {k: v for k, v in new_outputs}
 
         # update reference counts
-        for val_hash in new_outputs.itervalues():
+        for val_hash in six.itervalues(new_outputs):
             self.add_ref(val_hash)
-        for val_hash in invalidated_outputs.itervalues():
+        for val_hash in six.itervalues(invalidated_outputs):
             self.remove_ref(val_hash)
 
         # invalidate changed outputs
-        invalidated_outputs.update({k: None for k, _ in new_outputs.iteritems()})
+        invalidated_outputs.update({k: None for k, _ in six.iteritems(new_outputs)})
         node.outputs = outputs
         node.invalidate_children(invalidated_outputs)
 
@@ -274,10 +277,10 @@ class Node(object):
         block = ast.parse(self.code)
         if len(block.body) > 0 and type(block.body[-1]) is ast.Expr:
             last = ast.Expression(block.body.pop().value)
-            exec compile(block, '<string>', mode='exec') in env
+            exec(compile(block, '<string>', mode='exec'), env)
             res = eval(compile(last, '<string>', mode='eval'), env)
         else:
-            exec compile(block, '<string>', mode='exec') in env
+            exec(compile(block, '<string>', mode='exec'), env)
             res = None
 
         # find outputs which have changed from input hashes
