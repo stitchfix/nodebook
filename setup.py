@@ -3,10 +3,6 @@ from setuptools import setup, find_packages
 import os
 import sys
 
-# we don't support wheels because they won't let us install the nbextension (a bit hacky)
-if 'bdist_wheel' in sys.argv:
-    raise RuntimeError("Nodebook does not support wheels, coercing to pip fallback behavior (non-fatal error)")
-
 setup(
     name='nodebook',
     version='0.2.0',
