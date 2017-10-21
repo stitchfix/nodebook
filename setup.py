@@ -5,7 +5,7 @@ import sys
 
 setup(
     name='nodebook',
-    version='0.2.0',
+    version='0.2.1',
     author='Kevin Zielnicki',
     author_email='kzielnicki@stitchfix.com',
     license='Stitch Fix 2017',
