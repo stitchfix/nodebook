@@ -42,6 +42,16 @@ class TestReferenceFinder(object):
         assert rf.locals == {'pd', 'y'}
         assert rf.imports == {'pandas'}
 
+    def test_function(self, rf):
+        code_tree = ast.parse(
+            "def add(x,y):\n"
+            "    return x+y\n"
+        )
+        rf.visit(code_tree)
+        assert rf.inputs == set()
+        assert rf.locals == {'add', 'x', 'y'}
+        assert rf.imports == set()
+
 
 class TestNodebook(object):
     @pytest.fixture()

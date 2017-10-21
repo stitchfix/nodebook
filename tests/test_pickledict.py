@@ -33,6 +33,12 @@ class TestPickleDict(object):
         df = pd.DataFrame({'a': [0, 1, 2], 'b': ['foo', 'bar', 'baz']})
         mydict['test_df'] = df
         assert mydict['test_df'].equals(df)
+        
+    def test_func(self, mydict):
+        def add(a, b):
+            return a + b
+        mydict['test_func'] = add
+        assert mydict['test_func'](3,5) == 8
 
     def test_immutability(self, mydict):
         l = [1, 2, 3]
