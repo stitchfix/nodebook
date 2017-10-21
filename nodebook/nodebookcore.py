@@ -46,6 +46,9 @@ class ReferenceFinder(ast.NodeVisitor):
         self.locals.add(node.name)
         self.generic_visit(node)
 
+    def visit_arg(self, node):
+        self.locals.add(node.arg)
+
     def visit_AugAssign(self, node):
         target = node.target
         while (type(target) is ast.Subscript):
