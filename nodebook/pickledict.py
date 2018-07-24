@@ -8,8 +8,8 @@ import msgpack
 import inspect
 import six
 
-# using dill instead of pickle for more complete serialization
-import dill
+# using cloudpickle instead of pickle for more complete serialization
+import cloudpickle
 
 # Use cStringIO if available.
 try:
@@ -29,7 +29,7 @@ except ImportError:
     from collections import MutableMapping as DictMixin
 
 PANDAS_CODE = 1
-DILL_CODE = 2
+CLOUDPICKLE_CODE = 2
 
 
 def msgpack_serialize(obj):
@@ -38,27 +38,27 @@ def msgpack_serialize(obj):
             return msgpack.ExtType(PANDAS_CODE, obj.to_msgpack())
         except:
             # pandas msgpack support is experimental and sometimes fails
-            return msgpack.ExtType(DILL_CODE, dill.dumps(obj, recurse=True))
+            return msgpack.ExtType(CLOUDPICKLE_CODE, cloudpickle.dumps(obj))
     else:
         if inspect.isclass(obj):
             # dynamically defined classes default to __builtin__ but are only serializable in __main__
             if obj.__module__ == '__builtin__':
                 obj.__module__ = '__main__'
-        return msgpack.ExtType(DILL_CODE, dill.dumps(obj, recurse=True))
+        return msgpack.ExtType(CLOUDPICKLE_CODE, cloudpickle.dumps(obj))
 
 
 def msgpack_deserialize(code, data):
     if code == PANDAS_CODE:
         return pd.read_msgpack(data)
-    elif code == DILL_CODE:
-        return dill.loads(data)
+    elif code == CLOUDPICKLE_CODE:
+        return cloudpickle.loads(data)
     else:
         return msgpack.ExtType(code, data)
 
 
 class PickleDict(DictMixin):
     """
-    Dictionary with immutable elements using pickle(dill), optionally supporting persisting to disk
+    Dictionary with immutable elements using pickle(cloudpickle), optionally supporting persisting to disk
     """
 
     def __init__(self, persist_path=None):
@@ -136,8 +136,8 @@ def hash(obj, hash_name='md5'):
 
     try:
         dump(obj, stream)
-    except dill.PicklingError as e:
-        e.args += ('PicklingError while hashing %r: %r' % (obj, e),)
+    except Exception as e:
+        e.args += ('Exception while hashing %r: %r' % (obj, e),)
         raise
 
     dumps = stream.getvalue()

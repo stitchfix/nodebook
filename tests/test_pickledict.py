@@ -40,6 +40,15 @@ class TestPickleDict(object):
         mydict['test_func'] = add
         assert mydict['test_func'](3,5) == 8
 
+    def test_closure(self, mydict):
+        df = pd.DataFrame({'a': [0, 1, 2], 'b': ['foo', 'bar', 'baz']})
+        def foo():
+            return df
+        def bar():
+            return foo()
+        mydict['test_closure'] = bar
+        assert mydict['test_closure']().equals(df)
+
     def test_immutability(self, mydict):
         l = [1, 2, 3]
         mydict['test_mut'] = l
