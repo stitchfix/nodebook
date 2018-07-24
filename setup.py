@@ -5,10 +5,10 @@ import sys
 
 setup(
     name='nodebook',
-    version='0.2.1',
+    version='0.3.0',
     author='Kevin Zielnicki',
     author_email='kzielnicki@stitchfix.com',
-    license='Stitch Fix 2017',
+    license='Stitch Fix 2018',
     description='Nodebook Jupyter Extension',
     packages=find_packages(),
     long_description='Nodebook Jupyter Extension',
@@ -17,7 +17,7 @@ setup(
         'ipython',
         'jupyter',
         'click',
-        'dill',
+        'cloudpickle',
         'msgpack-python',
         'pandas',
         'pytest-runner',
