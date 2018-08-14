@@ -25,9 +25,32 @@ class TestPickleDict(object):
         mydict['test_string'] = 'foo'
         assert mydict['test_string'] == 'foo'
 
+        d = {'foo':'bar'}
+        mydict['test_string_dict'] = d
+        assert mydict['test_string_dict'] == d
+
     def test_bytes(self, mydict):
         mydict['test_bytes'] = b'foo'
         assert mydict['test_bytes'] == b'foo'
+
+        d = {b'foo':b'bar'}
+        mydict['test_bytes_dict'] = d
+        assert mydict['test_bytes_dict'] == d
+
+    def test_list(self, mydict):
+        l = [1,2,3]
+        mydict['test_list'] = l
+        assert mydict['test_list'] == l
+
+    def test_tuple(self, mydict):
+        t = (1,2,3)
+        mydict['test_tuple'] = t
+        assert mydict['test_tuple'] == t
+
+    def test_set(self, mydict):
+        s = {1,2,3}
+        mydict['test_set'] = s
+        assert mydict['test_set'] == s
 
     def test_df(self, mydict):
         df = pd.DataFrame({'a': [0, 1, 2], 'b': ['foo', 'bar', 'baz']})
