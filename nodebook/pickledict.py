@@ -66,7 +66,6 @@ class PickleDict(DictMixin):
         persist_path: if provided, perform serialization to/from disk to this path
         """
         self.persist_path = persist_path
-        self.encodings = {}
         self.dump = partial(msgpack.dump, default=msgpack_serialize)
         self.load = partial(msgpack.load, ext_hook=msgpack_deserialize)
         self.dict = {}
@@ -96,25 +95,21 @@ class PickleDict(DictMixin):
         if self.persist_path is not None:
             path = self.dict[key]
             with open(path, 'rb') as f:
-                value = self.load(f, encoding=self.encodings[key])
+                value = self.load(f, raw=False)
         else:
             f = StringIO(self.dict[key])
-            value = self.load(f, encoding=self.encodings[key])
+            value = self.load(f, raw=False)
         return value
 
     def __setitem__(self, key, value):
-        encoding = None
-        if isinstance(value, six.string_types):
-            encoding = 'utf-8'
-        self.encodings[key] = encoding
         if self.persist_path is not None:
             path = os.path.join(self.persist_path, '%s.pak' % key)
             with open(path, 'wb') as f:
-                self.dump(value, f, encoding=encoding)
+                self.dump(value, f, strict_types=True, use_bin_type=True)
             self.dict[key] = path
         else:
             f = StringIO()
-            self.dump(value, f, encoding=encoding)
+            self.dump(value, f, strict_types=True, use_bin_type=True)
             serialized = f.getvalue()
             self.dict[key] = serialized
 
