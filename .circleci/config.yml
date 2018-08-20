@@ -10,8 +10,11 @@ jobs:
     docker:
       - image: circleci/python:3.6
     working_directory: ~/repo
+    environment:
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
     steps:
       - checkout
+      - run: mkdir -p $CIRCLE_TEST_REPORTS
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "setup.py" }}
@@ -31,7 +34,12 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            pytest
+            pytest --junitxml=$CIRCLE_TEST_REPORTS/reports/pytest-report.xml
+      # Save test results
+      - store_test_results:
+          path: $CIRCLE_TEST_REPORTS
+      - store_artifacts:
+          path: $CIRCLE_TEST_REPORTS
   test-2.7:
     <<: *test-template
     docker:
