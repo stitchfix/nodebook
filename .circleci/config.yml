@@ -21,7 +21,8 @@ jobs:
           command: |
             python -m venv venv || virtualenv venv
             . venv/bin/activate
-            pip install -e .[test]
+            pip install pytest
+            pip install -e .
       - save_cache:
           paths:
             - ./venv
