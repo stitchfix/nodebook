@@ -37,9 +37,9 @@ jobs:
             pytest --junitxml=$CIRCLE_TEST_REPORTS/reports/pytest-report.xml
       # Save test results
       - store_test_results:
-          path: $CIRCLE_TEST_REPORTS
+          path: /tmp/circleci-test-results
       - store_artifacts:
-          path: $CIRCLE_TEST_REPORTS
+          path: /tmp/circleci-test-results
   test-2.7:
     <<: *test-template
     docker:
