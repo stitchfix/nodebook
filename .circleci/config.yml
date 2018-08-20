@@ -4,7 +4,6 @@ workflows:
   test:
     jobs:
       - test-3.6
-      - test-3.5
       - test-2.7
 jobs:
   test-3.6: &test-template
@@ -22,7 +21,7 @@ jobs:
           command: |
             python -m venv venv || virtualenv venv
             . venv/bin/activate
-            pip install -e .[dev]
+            pip install -e .[test]
       - save_cache:
           paths:
             - ./venv
