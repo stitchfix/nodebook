@@ -1,0 +1,46 @@
+version: 2
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test-3.6
+      - test-2.7
+jobs:
+  test-3.6: &test-template
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/repo
+    environment:
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+    steps:
+      - checkout
+      - run: mkdir -p $CIRCLE_TEST_REPORTS
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "setup.py" }}
+          - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: |
+            python -m venv venv || virtualenv venv
+            . venv/bin/activate
+            pip install pytest
+            pip install -e .
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "setup.py" }}
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            pytest --junitxml=$CIRCLE_TEST_REPORTS/reports/pytest-report.xml
+      # Save test results
+      - store_test_results:
+          path: /tmp/circleci-test-results
+      - store_artifacts:
+          path: /tmp/circleci-test-results
+  test-2.7:
+    <<: *test-template
+    docker:
+      - image: circleci/python:2.7
