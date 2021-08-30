@@ -67,7 +67,11 @@ def execute_cell(line, cell):
     ipython magic for executing nodebook cell, expects cell id and parent id inline, followed by code
     """
     assert NODEBOOK_STATE['nodebook'] is not None, "Nodebook not initialized, please use %nodebook {nodebook_name}"
-    cell_id, parent_id = line.lstrip().split(' ')
+    try:
+        cell_id, parent_id = line.lstrip().split(' ')
+    except ValueError:
+        cell_id = line.lstrip()
+        parent_id = None
 
     # make sure cell exists and is in the right position
     NODEBOOK_STATE['nodebook'].insert_node_after(cell_id, parent_id)
