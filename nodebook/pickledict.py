@@ -26,7 +26,7 @@ try:
     from UserDict import DictMixin
 except ImportError:
     # see https://github.com/flask-restful/flask-restful/pull/231/files
-    from collections import MutableMapping as DictMixin
+    from collections.abc import MutableMapping as DictMixin
 
 PANDAS_CODE = 1
 CLOUDPICKLE_CODE = 2
